@@ -69,7 +69,7 @@ fun VerificationScreen(
             onClick = {
                 // Aquí se implementaría la lógica de verificación.
                 // Si es exitosa, navega a la pantalla HOME.
-                navController.navigate(Routes.HOME) {
+                navController.navigate(Routes.MAINSCREEN) {
                     popUpTo(Routes.LOGIN) { inclusive = true }
                 }
             },

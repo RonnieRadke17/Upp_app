@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.upp_app.MainScreen
 import com.example.upp_app.ui.theme.screen.login.LoginScreen
 import com.example.upp_app.ui.theme.screen.register.RegisterScreen
 import com.example.upp_app.ui.theme.screen.verification.VerificationScreen
@@ -28,6 +29,9 @@ fun NavigationHelper() {
         }
         composable(Routes.HOME) {
             UserListScreen(navController)
+        }
+        composable(Routes.MAINSCREEN) {
+            MainScreen(navController)
         }
     }
 }
