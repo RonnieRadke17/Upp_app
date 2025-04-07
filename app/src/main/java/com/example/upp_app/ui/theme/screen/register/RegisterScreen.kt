@@ -17,21 +17,20 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.upp_app.R
 import com.example.upp_app.model.RegisterRequest
 import com.example.upp_app.network.RetrofitClient
-import com.example.upp_app.ui.theme.Upp_appTheme
+import com.example.upp_app.navigation.Routes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import androidx.navigation.NavController
+import kotlinx.coroutines.withContext
 
 @Composable
-fun RegisterScreen( navController: NavController,
-                    modifier: Modifier = Modifier) {
+fun RegisterScreen(navController: NavController, modifier: Modifier = Modifier) {
     var name by remember { mutableStateOf(TextFieldValue("")) }
     var email by remember { mutableStateOf(TextFieldValue("")) }
     var password by remember { mutableStateOf(TextFieldValue("")) }
@@ -212,10 +211,7 @@ fun RegisterScreen( navController: NavController,
 
         // Botón de "Sign Up"
         Button(
-            onClick = {//primero revisar si los valores de los campos no estan vacios antes de realizar peticion
-
-
-
+            onClick = {
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
                         val response = RetrofitClient.apiService.registerUser(
@@ -225,17 +221,12 @@ fun RegisterScreen( navController: NavController,
                                 password = password.text
                             )
                         )
-
                         if (response.success) {
-                            name = TextFieldValue("")
-                            email = TextFieldValue("")
-                            password = TextFieldValue("")
-                            navController.navigate("verification")
-
-                            //falta redireccion a otra vista y un Toast el cual diga registro exitoso
-                            //redireccionar a la vista del codigo de verificacion
+                            // Vuelve al hilo principal para realizar la navegación
+                            withContext(Dispatchers.Main) {
+                                navController.navigate(Routes.VERIFICATION)
+                            }
                             Log.d("REGISTER", "✅ Usuario registrado: ${response.data}")
-                            // Aquí podrías mostrar un Toast, navegar o limpiar el formulario
                         } else {
                             Log.e("REGISTER", "❌ Errores de validación:")
                             response.errors?.forEach { (campo, errores) ->
@@ -246,16 +237,16 @@ fun RegisterScreen( navController: NavController,
                         Log.e("REGISTER", "❌ Error de red: ${e.message}")
                     }
                 }
-            }
-            ,
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6D4C41)) // Color café
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6D4C41))
         ) {
             Text(text = "Sign Up", color = Color.White)
         }
+
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -272,23 +263,20 @@ fun RegisterScreen( navController: NavController,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_apple), // Ícono de Apple
+                painter = painterResource(id = R.drawable.ic_apple),
                 contentDescription = "Apple Icon",
                 modifier = Modifier.size(40.dp)
             )
-
             Image(
-                painter = painterResource(id = R.drawable.ic_facebook), // Ícono de Facebook
+                painter = painterResource(id = R.drawable.ic_facebook),
                 contentDescription = "Facebook Icon",
                 modifier = Modifier.size(40.dp)
             )
             Image(
-                painter = painterResource(id = R.drawable.ic_google), // Ícono de Google
+                painter = painterResource(id = R.drawable.ic_google),
                 contentDescription = "Google Icon",
                 modifier = Modifier.size(40.dp)
             )
-
         }
     }
 }
-

@@ -2,10 +2,13 @@ package com.example.upp_app.ui.theme.screen.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,14 +19,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.upp_app.R
-import com.example.upp_app.ui.theme.Upp_appTheme
+import com.example.upp_app.navigation.Routes
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
+fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
     var email by remember { mutableStateOf(TextFieldValue("")) }
     var password by remember { mutableStateOf(TextFieldValue("")) }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -128,7 +131,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                 )
 
                 // Ícono de visibilidad (a la derecha del campo)
-                IconButton(
+                androidx.compose.material3.IconButton(
                     onClick = { passwordVisible = !passwordVisible },
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
@@ -158,12 +161,15 @@ fun LoginScreen(modifier: Modifier = Modifier) {
 
         // Botón de "Sign In"
         Button(
-            onClick = { /* Implement login logic */ },
+            onClick = {
+                // Aquí se simula que el login es exitoso y se navega a Home.
+                navController.navigate(Routes.HOME)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6D4C41)) // Color café
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6D4C41))
         ) {
             Text(text = "Sign In", color = Color.White)
         }
@@ -183,17 +189,17 @@ fun LoginScreen(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_google), // Ícono de Google
+                painter = painterResource(id = R.drawable.ic_google),
                 contentDescription = "Google Icon",
                 modifier = Modifier.size(40.dp)
             )
             Image(
-                painter = painterResource(id = R.drawable.ic_facebook), // Ícono de Facebook
+                painter = painterResource(id = R.drawable.ic_facebook),
                 contentDescription = "Facebook Icon",
                 modifier = Modifier.size(40.dp)
             )
             Image(
-                painter = painterResource(id = R.drawable.ic_apple), // Ícono de Apple
+                painter = painterResource(id = R.drawable.ic_apple),
                 contentDescription = "Apple Icon",
                 modifier = Modifier.size(40.dp)
             )
@@ -201,12 +207,15 @@ fun LoginScreen(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Enlace "Don't have an account? Sign Up"
+        // Enlace "Don't have an account? Sign Up" - Navega a la pantalla de Registro
         Text(
             text = "Don't have an account? Sign Up",
             textDecoration = TextDecoration.Underline,
             color = Color.Gray,
-            fontWeight = FontWeight.Light
+            fontWeight = FontWeight.Light,
+            modifier = Modifier.clickable {
+                navController.navigate(Routes.REGISTER)
+            }
         )
     }
 }

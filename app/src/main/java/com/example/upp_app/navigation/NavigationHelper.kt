@@ -1,15 +1,33 @@
 package com.example.upp_app.navigation
 
+import androidx.compose.runtime.Composable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.upp_app.ui.theme.screen.login.LoginScreen
+import com.example.upp_app.ui.theme.screen.register.RegisterScreen
+import com.example.upp_app.ui.theme.screen.verification.VerificationScreen
+import com.example.upp_app.ui.theme.screen.users.UserListScreen
 
-import androidx.navigation.NavController
+@Composable
+fun NavigationHelper() {
+    val navController = rememberNavController()
 
-fun goTo(navController: NavController, route: String) {
-    navController.navigate(route) {
-        launchSingleTop = true
-        restoreState = true
-        popUpTo(navController.graph.startDestinationId) {
-            saveState = true
+    NavHost(
+        navController = navController,
+        startDestination = Routes.LOGIN
+    ) {
+        composable(Routes.LOGIN) {
+            LoginScreen(navController)
+        }
+        composable(Routes.REGISTER) {
+            RegisterScreen(navController)
+        }
+        composable(Routes.VERIFICATION) {
+            VerificationScreen(navController)
+        }
+        composable(Routes.HOME) {
+            UserListScreen(navController)
         }
     }
 }
-

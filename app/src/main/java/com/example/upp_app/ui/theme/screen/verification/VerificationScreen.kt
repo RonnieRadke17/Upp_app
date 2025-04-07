@@ -1,6 +1,5 @@
 package com.example.upp_app.ui.theme.screen.verification
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,15 +12,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.upp_app.ui.theme.Upp_appTheme
 import androidx.navigation.NavController
+import com.example.upp_app.navigation.Routes
 
 @Composable
-fun VerificationScreen( navController: NavController,
-                        modifier: Modifier = Modifier) {
+fun VerificationScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier
+) {
     var code1 by remember { mutableStateOf(TextFieldValue("")) }
     var code2 by remember { mutableStateOf(TextFieldValue("")) }
     var code3 by remember { mutableStateOf(TextFieldValue("")) }
@@ -66,12 +66,18 @@ fun VerificationScreen( navController: NavController,
 
         // Botón de "Verify"
         Button(
-            onClick = { /* Implement verification logic */ },
+            onClick = {
+                // Aquí se implementaría la lógica de verificación.
+                // Si es exitosa, navega a la pantalla HOME.
+                navController.navigate(Routes.HOME) {
+                    popUpTo(Routes.LOGIN) { inclusive = true }
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6D4C41)) // Color café
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6D4C41))
         ) {
             Text(text = "Verify", color = Color.White)
         }
@@ -96,7 +102,7 @@ fun CodeField(
     BasicTextField(
         value = value,
         onValueChange = { newValue ->
-            if (newValue.text.length <= 1) { // Limita a un solo carácter
+            if (newValue.text.length <= 1) {
                 onValueChange(newValue)
             }
         },
@@ -124,11 +130,3 @@ fun CodeField(
         }
     )
 }
-/*
-@Preview(showBackground = true)
-@Composable
-fun VerificationScreenPreview() {
-    Upp_appTheme {
-        VerificationScreen()
-    }
-}*/
