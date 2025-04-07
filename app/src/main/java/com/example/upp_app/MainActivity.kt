@@ -1,5 +1,6 @@
 package com.example.upp_app
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,6 +19,12 @@ import com.example.upp_app.ui.theme.screen.verification.VerificationScreen
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Revisa el valor almacenado en SharedPreferences
+        val sharedPref = getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE)
+        val isAuthenticated = sharedPref.getString("autentificado", "false")
+        // Si el valor es "true", se inicia en la pantalla HOME, de lo contrario en LOGIN
+        val startDestination = if (isAuthenticated == "true") Routes.HOME else Routes.LOGIN
+
         setContent {
             Upp_appTheme {
                 val navController = rememberNavController()

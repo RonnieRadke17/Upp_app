@@ -1,5 +1,6 @@
 package com.example.upp_app.ui.theme.screen.login
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -139,6 +140,13 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                         val response = RetrofitClient.apiService.loginUser(request)
 
                         if (response.success) {
+                            //registro en el localstorage
+                            val sharedPref = context.getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE)
+                            val success = sharedPref.edit().apply {
+                                putString("autentificado", "true")
+                            }.commit()  // Bloquea hasta que se guarde en disco y devuelve true o false
+
+
                             Toast.makeText(context, "✅ Bienvenido ${response.data?.name}", Toast.LENGTH_SHORT).show()
                             navController.navigate(Routes.HOME)
                         } else {

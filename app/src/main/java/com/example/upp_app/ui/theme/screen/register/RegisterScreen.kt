@@ -1,5 +1,6 @@
 package com.example.upp_app.ui.theme.screen.register
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,6 +30,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+
 
 @Composable
 fun RegisterScreen(navController: NavController, modifier: Modifier = Modifier) {
@@ -37,6 +41,8 @@ fun RegisterScreen(navController: NavController, modifier: Modifier = Modifier) 
     var password by remember { mutableStateOf(TextFieldValue("")) }
     var passwordVisible by remember { mutableStateOf(false) }
     var agreeTerms by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
 
     Column(
         modifier = modifier
@@ -222,23 +228,32 @@ fun RegisterScreen(navController: NavController, modifier: Modifier = Modifier) 
                                 password = password.text
                             )
                         )
-                        if (response.success) {
-                            // Vuelve al hilo principal para realizar la navegación
-                            withContext(Dispatchers.Main) {
+                        withContext(Dispatchers.Main) {
+                            if (response.success) {
+                                //metodo que verifica que esta auth
+                                val sharedPref = context.getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE)
+                                val success = sharedPref.edit().apply {
+                                    putString("autentificado", "true")
+                                }.commit()  // Bloquea hasta que se guarde en disco y devuelve true o false
+
+
+                                Toast.makeText(context, "✅ Registro exitoso", Toast.LENGTH_SHORT).show()
                                 navController.navigate(Routes.VERIFICATION)
-                            }
-                            Log.d("REGISTER", "✅ Usuario registrado: ${response.data}")
-                        } else {
-                            Log.e("REGISTER", "❌ Errores de validación:")
-                            response.errors?.forEach { (campo, errores) ->
-                                Log.e("REGISTER", "$campo: ${errores.joinToString()}")
+                            } else {
+                                val errores = response.errors?.entries?.joinToString("\n") {
+                                    "${it.key}: ${it.value.joinToString()}"
+                                } ?: "❌ Error desconocido"
+                                Toast.makeText(context, errores, Toast.LENGTH_LONG).show()
                             }
                         }
                     } catch (e: Exception) {
-                        Log.e("REGISTER", "❌ Error de red: ${e.message}")
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(context, "❌ Error de red: ${e.message}", Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
-            },
+            }
+            ,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
