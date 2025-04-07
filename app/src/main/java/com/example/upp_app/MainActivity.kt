@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Upp_appTheme {
                 val navController = rememberNavController()
-
+                //prueba de que se sube el commit
                 Surface(color = MaterialTheme.colorScheme.background) {
                     NavHost(
                         navController = navController,
